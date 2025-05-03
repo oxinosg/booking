@@ -4,8 +4,9 @@ This project implements a backend service designed to manage appointment booking
 
 ## Instructions to run
 #### 1. Install dependencies: `npm install`
-#### 2. Run the PosgreSQL and Redis using: `docker compose up -d`
-#### 3. Run the Nestjs app using: `npm run start`
+#### 2. Setup migrations: `npx prisma migrate dev --name init --schema ./apps/prisma/schema.prisma`
+#### 3. Run the PosgreSQL and Redis using: `docker compose up -d`
+#### 4. Run the Nestjs app using: `npm run start`
 
 ## System design
 ### Current design
