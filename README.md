@@ -12,7 +12,7 @@ This project implements a backend service designed to manage appointment booking
 ### Current design
 A single NestJS monolith exposes REST endpoints for providers, schedules, and appointments, uses Prisma/PostgreSQL for data persistence, Redis for distributed locking, and emits domain events via EventEmitter2 to downstream consumers.
 
-![design](https://github.com/user-attachments/assets/8a99a4d0-6e7e-46a9-bc0d-d52caa6aff36)
+![design](design.png)
 
 ## Roadmap
 ### Core Implementation (Monolith)
