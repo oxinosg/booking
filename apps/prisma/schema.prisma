@@ -1,0 +1,65 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum AppointmentStatus {
+  CONFIRMED
+  CANCELLED
+  RESCHEDULED
+}
+
+enum ScheduleStatus {
+  ACTIVE
+  INACTIVE
+  IN_PROGRESS
+}
+
+enum ProviderStatus {
+  ACTIVE
+  PENDING
+  DISABLED
+}
+
+model Provider {
+  id                         String         @id @default(cuid())
+  status                     ProviderStatus @default(ACTIVE)
+  appointmentDuration        Int            @default(30) // Default slot length in minutes (e.g. 30)
+  timezone                   String?                     // Provider's timezone (e.g. "Europe/Berlin")
+
+  schedule                   Schedule[]     @relation("ProviderSchedule")
+  appointments               Appointment[]
+}
+
+model Schedule {
+  id         Int      @id @default(autoincrement())
+  provider   Provider @relation("ProviderSchedule", fields: [providerId], references: [id])
+  providerId String
+
+  dayOfWeek  Int      // 1=Monday,...7=Sunday
+  startTime  String   // "09:00"
+  endTime    String   // "17:00"
+  status     ScheduleStatus  @default(ACTIVE)
+
+  @@unique([providerId, dayOfWeek])
+  @@index([providerId, status])
+}
+
+model Appointment {
+  id         Int      @id @default(autoincrement())
+  provider   Provider @relation(fields: [providerId], references: [id])
+  providerId String
+  patientId  String
+
+  startTime  DateTime
+  endTime    DateTime
+  status     AppointmentStatus @default(CONFIRMED)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([providerId, startTime])
+  @@index([patientId])
+}
